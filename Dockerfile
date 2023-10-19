@@ -6,6 +6,6 @@ RUN CGO_ENABLED=0 go build
 
 FROM scratch
 COPY --from=builder /app/secrets /secrets
-COPY --from=builder /app/age /bin/age
+COPY --from=builder /app/age/age /bin/age
 ENV PATH=/bin
 ENTRYPOINT ["/secrets"]
