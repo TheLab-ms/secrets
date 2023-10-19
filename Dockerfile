@@ -1,7 +1,7 @@
 FROM golang:1.21 AS builder
 WORKDIR /app
 COPY . .
-RUN curl -o age -L https://dl.filippo.io/age/latest?for=linux/amd64
+RUN curl -o age -L https://dl.filippo.io/age/latest?for=linux/amd64 && chmod +x age
 RUN CGO_ENABLED=0 go build
 
 FROM scratch
