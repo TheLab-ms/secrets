@@ -53,10 +53,10 @@ func main() {
 
 		js := &bytes.Buffer{}
 
-		cmd := exec.CommandContext(r.Context(), "age", "--decrypt", "-i=key.txt")
+		cmd := exec.CommandContext(r.Context(), "age", "--decrypt", "-i", "key.txt")
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = js
-		cmd.Stdin = base64.NewDecoder(base64.URLEncoding, bytes.NewBufferString(r.URL.Query().Get("c")))
+		cmd.Stdin = base64.NewDecoder(base64.RawURLEncoding, bytes.NewBufferString(r.URL.Query().Get("c")))
 		if err := cmd.Run(); err != nil {
 			log.Printf("age --decrypt failed (stderr was passed through) err=%s", err)
 			http.Error(w, "decryption error or invalid input", 400)
@@ -89,11 +89,10 @@ func main() {
 		}
 
 		ciphertext := &bytes.Buffer{}
-		enc := base64.NewEncoder(base64.URLEncoding, ciphertext)
 
 		cmd := exec.CommandContext(r.Context(), "age", "--encrypt", "-r", pubkey)
 		cmd.Stderr = os.Stderr
-		cmd.Stdout = enc
+		cmd.Stdout = ciphertext
 		cmd.Stdin = bytes.NewBuffer(js)
 		if err := cmd.Run(); err != nil {
 			log.Printf("age --encrypt failed (stderr was passed through) err=%s", err)
@@ -103,7 +102,7 @@ func main() {
 
 		w.Header().Add("Content-Type", "text/html")
 		templates.ExecuteTemplate(w, "encrypted.html", map[string]any{
-			"url": selfURL + "?c=" + ciphertext.String(),
+			"url": selfURL + "?c=" + base64.RawURLEncoding.EncodeToString(ciphertext.Bytes()),
 		})
 	})
 
