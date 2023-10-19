@@ -56,7 +56,7 @@ func main() {
 		cmd := exec.CommandContext(r.Context(), "age", "--decrypt", "-i=key.txt")
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = js
-		cmd.Stdin = base64.NewDecoder(base64.RawURLEncoding, bytes.NewBufferString(r.URL.Query().Get("c")))
+		cmd.Stdin = base64.NewDecoder(base64.URLEncoding, bytes.NewBufferString(r.URL.Query().Get("c")))
 		if err := cmd.Run(); err != nil {
 			log.Printf("age --decrypt failed (stderr was passed through) err=%s", err)
 			http.Error(w, "decryption error or invalid input", 400)
