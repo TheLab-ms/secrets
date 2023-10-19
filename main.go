@@ -44,7 +44,7 @@ func main() {
 		}
 
 		// The caller provided ciphertext, decrypt it
-		userID := r.Header.Get("X-Forwarded-User")
+		userID := r.Header.Get("X-Forwarded-Email")
 		userGroups := r.Header.Get("X-Forwarded-Groups")
 		if !strings.Contains(userGroups, "leadership") {
 			http.Error(w, "you must be a member of the leadership group to decrypt values", 403)
@@ -75,7 +75,7 @@ func main() {
 	})
 
 	http.HandleFunc("/encrypt", func(w http.ResponseWriter, r *http.Request) {
-		userID := r.Header.Get("X-Forwarded-User")
+		userID := r.Header.Get("X-Forwarded-Email")
 
 		p := &payload{
 			EncryptedByUser: userID,
