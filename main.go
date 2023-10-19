@@ -42,17 +42,12 @@ func main() {
 			templates.ExecuteTemplate(w, "index.html", nil)
 			return
 		}
-
 		// The caller provided ciphertext, decrypt it
+
 		userID := r.Header.Get("X-Forwarded-Email")
-		userGroups := r.Header.Get("X-Forwarded-Groups")
-		if !strings.Contains(userGroups, "leadership") {
-			http.Error(w, "you must be a member of the leadership group to decrypt values", 403)
-			return
-		}
+		isLeadership := strings.Contains(r.Header.Get("X-Forwarded-Groups"), "leadership")
 
 		js := &bytes.Buffer{}
-
 		cmd := exec.CommandContext(r.Context(), "age", "--decrypt", "-i", "key.txt")
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = js
@@ -66,6 +61,13 @@ func main() {
 		p := &payload{}
 		if err := json.Unmarshal(js.Bytes(), p); err != nil {
 			http.Error(w, "invalid input", 400)
+			return
+		}
+
+		if !isLeadership {
+			p.Value = "" // just in case the template somehow leaks the value
+			w.Header().Add("Content-Type", "text/html")
+			templates.ExecuteTemplate(w, "decrypted-not-leadership.html", p)
 			return
 		}
 
