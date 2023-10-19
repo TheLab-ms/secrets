@@ -1,7 +1,7 @@
 FROM golang:1.21 AS builder
 WORKDIR /app
 COPY . .
-RUN curl -L "https://github.com/FiloSottile/age/releases/download/v1.1.0/age-v1.1.0-linux-arm64.tar.gz" | tar -zx
+RUN curl -L "https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz" | tar -zx
 RUN CGO_ENABLED=0 go build
 
 FROM scratch
