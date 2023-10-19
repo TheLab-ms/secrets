@@ -102,7 +102,8 @@ func main() {
 
 		w.Header().Add("Content-Type", "text/html")
 		templates.ExecuteTemplate(w, "encrypted.html", map[string]any{
-			"url": selfURL + "?c=" + base64.RawURLEncoding.EncodeToString(ciphertext.Bytes()),
+			"url":  selfURL + "?c=" + base64.RawURLEncoding.EncodeToString(ciphertext.Bytes()),
+			"desc": p.Description,
 		})
 	})
 
