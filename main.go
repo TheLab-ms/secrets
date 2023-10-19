@@ -91,7 +91,7 @@ func main() {
 		ciphertext := &bytes.Buffer{}
 		enc := base64.NewEncoder(base64.URLEncoding, ciphertext)
 
-		cmd := exec.CommandContext(r.Context(), "age", "--armor", "-r", pubkey)
+		cmd := exec.CommandContext(r.Context(), "age", "--encrypt", "-r", pubkey)
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = enc
 		cmd.Stdin = bytes.NewBuffer(js)
