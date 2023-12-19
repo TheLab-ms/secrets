@@ -109,6 +109,11 @@ func main() {
 		})
 	})
 
+	go func() {
+		panic(http.ListenAndServe(":8088", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(204)
+		})))
+	}()
 	panic(http.ListenAndServe("127.0.0.1:8080", nil))
 }
 
