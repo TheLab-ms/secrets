@@ -109,7 +109,7 @@ func main() {
 		})
 	})
 
-	panic(http.ListenAndServe(":8080", nil))
+	panic(http.ListenAndServe("127.0.0.1:8080", nil))
 }
 
 type payload struct {
